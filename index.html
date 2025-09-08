@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>JonyBird</title>
   <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
   <style>
@@ -18,11 +18,11 @@
       wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
     }).ready(async function(fs, main) {
       try {
-        // Open the BIRD.jsdos package
-        await fs.extract("BIRD.jsdos"); 
+        // Extract the BIRD.jsdos package
+        await fs.extract("BIRD.jsdos");
 
-        // After extraction, start DOSBox automatically
-        main(); 
+        // Run the game inside the subfolder
+        main(["C:\\games\\BIRD.EXE"]);  // <-- path inside the .jsdos archive
       } catch (err) {
         console.error("Failed to load BIRD.jsdos:", err);
       }
