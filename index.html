@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>JonyBird</title>
-  <!-- Load js-dos from CDN -->
+  <!-- js-dos CSS from CDN -->
   <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
   <style>
     body { margin: 0; background: black; }
@@ -13,22 +13,21 @@
 <body>
   <div id="dosbox"></div>
 
-  <!-- Load js-dos from CDN -->
+  <!-- js-dos JS from CDN -->
   <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
   <script>
-    // THIS IS THE OLD SCRIPT SECTION YOU HAD
+    // Initialize js-dos on the div
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
-    }).ready(function (fs, main) {
-      // NEW: extract your BIRD.jsdos package
+    }).ready(function(fs, main) {
+      // Extract the packaged game
       fs.extract("BIRD.jsdos").then(() => {
-        // run DOSBox with your config
-        main(["-conf", "dosbox.conf"]);
+        // Start the game automatically
+        main();
+      }).catch(err => {
+        console.error("Failed to extract BIRD.jsdos:", err);
       });
     });
   </script>
 </body>
 </html>
-
-
-
