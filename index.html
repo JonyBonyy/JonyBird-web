@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>JonyBird</title>
-  <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
+  <link rel="stylesheet" href="js-dos.css">
   <style>
     body { margin: 0; background: black; }
     #dosbox { width: 100vw; height: 100vh; }
@@ -11,21 +11,14 @@
 </head>
 <body>
   <div id="dosbox"></div>
-
-  <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
+  <script src="js-dos.js"></script>
   <script>
     Dos(document.getElementById("dosbox"), {
-      wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
-    }).ready(async function(fs, main) {
-      try {
-        // Extract the BIRD.jsdos package
-        await fs.extract("BIRD.jsdos");
-
-        // Run the game inside the subfolder
-        main(["C:\\games\\BIRD.EXE"]);  // <-- path inside the .jsdos archive
-      } catch (err) {
-        console.error("Failed to load BIRD.jsdos:", err);
-      }
+      wdosboxUrl: "wdosbox.js"
+    }).ready(function (fs, main) {
+      fs.extract("BIRD.jsdos").then(() => {
+        main(["-conf", "dosbox.conf"]);
+      });
     });
   </script>
 </body>
