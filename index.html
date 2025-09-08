@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>JonyBird</title>
+  <!-- Load js-dos CSS from CDN -->
   <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
   <style>
     body { margin: 0; background: black; }
@@ -12,20 +13,22 @@
 <body>
   <div id="dosbox"></div>
 
+  <!-- Load js-dos JS from CDN -->
   <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
   <script>
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
-    }).ready(async function(fs, main) {
-      try {
-        // Open the BIRD.jsdos package
-        await fs.extract("BIRD.jsdos"); 
-
-        // After extraction, start DOSBox automatically
-        main(); 
-      } catch (err) {
-        console.error("Failed to load BIRD.jsdos:", err);
-      }
+    }).ready(function(fs, main) {
+      // Persistent storage so best score is saved
+      fs.persist().then(() => {
+        // Extract packaged game
+        fs.extract("BIRD.jsdos").then(() => {
+          // Automatically run the game
+          // IMPORTANT: change this path to match the structure inside your .jsdos
+          main(["BIRD.EXE"]); // if your EXE is at the root
+          // main(["C:\\games\\BIRD.EXE"]); // if inside a folder called 'games'
+        });
+      });
     });
   </script>
 </body>
