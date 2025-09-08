@@ -12,18 +12,21 @@
 </head>
 <body>
   <div id="dosbox"></div>
-  
+
   <!-- Load js-dos from CDN -->
   <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
   <script>
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
     }).ready(function (fs, main) {
-      fs.extract("BIRD.jsdos").then(() => {
-        main(["-conf", "dosbox.conf"]);
-      });
+      // Load your EXE directly from GitHub Pages
+      fs.createFile("BIRD.EXE", "https://jonybonyy.github.io/JonyBird-web/BIRD.EXE")
+        .then(() => {
+          main(["BIRD.EXE"]);
+        });
     });
   </script>
 </body>
 </html>
+
 
