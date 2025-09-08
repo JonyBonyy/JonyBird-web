@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>JonyBird</title>
-    <link rel="stylesheet" href="js-dos.css">
-    <script src="js-dos.js"></script>
-  </head>
-  <body>
-    <div id="dosbox" style="width: 800px; height: 600px;"></div>
-    <script>
-      Dos(document.getElementById("dosbox"), {
-        wdosboxUrl: "wdosbox.js"
-      }).ready((fs, main) => {
-        main(["BIRD.jsdos"]);
+<head>
+  <meta charset="utf-8">
+  <title>JonyBird</title>
+  <link rel="stylesheet" href="js-dos.css">
+  <style>
+    body { margin: 0; background: black; }
+    #dosbox { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="dosbox"></div>
+  <script src="js-dos.js"></script>
+  <script>
+    Dos(document.getElementById("dosbox"), {
+      wdosboxUrl: "wdosbox.js"
+    }).ready(function (fs, main) {
+      fs.persist().then(() => {
+        // Load BIRD.jsdos directly from your GitHub repo
+        fetch("https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos")
+          .then(response => response.arrayBuffer())
+          .then(data => {
+            fs.createFile("BIRD.jsdos", new Uint8Array(data));
+            main(["BIRD.jsdos"]);
+          });
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
