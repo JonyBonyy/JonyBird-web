@@ -16,17 +16,19 @@
   <!-- Load js-dos from CDN -->
   <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
   <script>
+    // THIS IS THE OLD SCRIPT SECTION YOU HAD
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
     }).ready(function (fs, main) {
-      // Load your EXE directly from GitHub Pages
-      fs.createFile("BIRD.EXE", "https://jonybonyy.github.io/JonyBird-web/BIRD.EXE")
-        .then(() => {
-          main(["BIRD.EXE"]);
-        });
+      // NEW: extract your BIRD.jsdos package
+      fs.extract("BIRD.jsdos").then(() => {
+        // run DOSBox with your config
+        main(["-conf", "dosbox.conf"]);
+      });
     });
   </script>
 </body>
 </html>
+
 
 
