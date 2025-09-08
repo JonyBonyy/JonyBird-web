@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>JonyBird</title>
-  <link rel="stylesheet" href="js-dos.css">
+  <!-- js-dos CSS from CDN -->
+  <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
   <style>
     body { margin: 0; background: black; }
     #dosbox { width: 100vw; height: 100vh; }
@@ -11,16 +12,21 @@
 </head>
 <body>
   <div id="dosbox"></div>
-  <script src="js-dos.js"></script>
+
+  <!-- js-dos JS from CDN -->
+  <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
   <script>
     Dos(document.getElementById("dosbox"), {
-      wdosboxUrl: "wdosbox.js"
-    }).ready(function (fs, main) {
-      // Persistent storage so best score is saved
+      wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
+    }).ready(function(fs, main) {
+      // Persistent storage (optional)
       fs.persist().then(() => {
-        // Extract packaged game
-        fs.extract("flappy.jsdos").then(() => {
-          main(["-conf", "dosbox.conf"]);
+        // Extract the packaged game
+        fs.extract("BIRD.jsdos").then(() => {
+          // Automatically run the EXE inside the archive
+          main(["BIRD.EXE"]);  // <-- replace with "C:\\folder\\BIRD.EXE" if it's inside a subfolder
+        }).catch(err => {
+          console.error("Failed to extract BIRD.jsdos:", err);
         });
       });
     });
