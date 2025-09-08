@@ -16,8 +16,12 @@
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "wdosbox.js"
     }).ready(function (fs, main) {
-      fs.extract("BIRD.jsdos").then(() => {
-        main(["-conf", "dosbox.conf"]);
+      // Persistent storage so best score is saved
+      fs.persist().then(() => {
+        // Extract packaged game
+        fs.extract("flappy.jsdos").then(() => {
+          main(["-conf", "dosbox.conf"]);
+        });
       });
     });
   </script>
