@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>JonyBird</title>
-  <link rel="stylesheet" href="js-dos.css">
+  <!-- Load js-dos from CDN -->
+  <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
   <style>
     body { margin: 0; background: black; }
     #dosbox { width: 100vw; height: 100vh; }
@@ -11,10 +12,12 @@
 </head>
 <body>
   <div id="dosbox"></div>
-  <script src="js-dos.js"></script>
+  
+  <!-- Load js-dos from CDN -->
+  <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
   <script>
     Dos(document.getElementById("dosbox"), {
-      wdosboxUrl: "wdosbox.js"
+      wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
     }).ready(function (fs, main) {
       fs.extract("BIRD.jsdos").then(() => {
         main(["-conf", "dosbox.conf"]);
@@ -23,3 +26,4 @@
   </script>
 </body>
 </html>
+
