@@ -13,15 +13,10 @@
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    Dos(document.getElementById("dosbox"), {
+    const dos = Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "wdosbox.js"
-    }).ready(function (fs, main) {
-      fs.persist().then(() => {
-        fs.extract("https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos").then(() => {
-          main(["-conf", "dosbox.conf"]);
-        });
-      });
     });
+   dos.run("https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos");
   </script>
 </body>
 </html>
