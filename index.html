@@ -16,14 +16,12 @@
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "wdosbox.js"
     }).ready(function (fs, main) {
+      // Persistent storage so best score is saved
       fs.persist().then(() => {
-        // Load BIRD.jsdos directly from your GitHub repo
-        fetch("https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos")
-          .then(response => response.arrayBuffer())
-          .then(data => {
-            fs.createFile("BIRD.jsdos", new Uint8Array(data));
-            main(["BIRD.jsdos"]);
-          });
+        // Extract packaged game directly from GitHub Pages
+        fs.extract("https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos").then(() => {
+          main(["-conf", "dosbox.conf"]);
+        });
       });
     });
   </script>
