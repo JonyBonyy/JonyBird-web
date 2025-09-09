@@ -15,14 +15,15 @@
   <script>
     const url = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    const dos = Dos(document.getElementById("dosbox"), {
+    Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "wdosbox.js"
-    });
-
-    dos.run(url).then(() => {
-      console.log("✅ Game loaded successfully from " + url);
-    }).catch(err => {
-      console.error("❌ Failed to load game:", err);
+    }).ready(function (fs, main) {
+      fs.extract(url).then(() => {
+        main(["-conf", "dosbox.conf"]);
+        console.log("✅ Game loaded successfully");
+      }).catch(err => {
+        console.error("❌ Failed to load:", err);
+      });
     });
   </script>
 </body>
