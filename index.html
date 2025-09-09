@@ -16,9 +16,7 @@
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "wdosbox.js"
     }).ready(function (fs, main) {
-      // Persistent storage so best score is saved
       fs.persist().then(() => {
-        // Extract packaged game directly from GitHub Pages
         fs.extract("https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos").then(() => {
           main(["-conf", "dosbox.conf"]);
         });
