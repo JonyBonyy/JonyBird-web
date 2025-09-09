@@ -14,15 +14,8 @@
   <script src="js-dos.js"></script>
   <script>
     Dos(document.getElementById("dosbox"), {
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
       wdosboxUrl: "wdosbox.js"
-    }).ready(function (fs, main) {
-      // לשמור את הקבצים בין הפעלות
-      fs.persist().then(() => {
-        // לטעון את המשחק מתוך הקובץ BIRD.jsdos
-        fs.extract("BIRD.jsdos").then(() => {
-          main(["-conf", "dosbox.conf"]);
-        });
-      });
     });
   </script>
 </body>
