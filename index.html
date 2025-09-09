@@ -13,16 +13,15 @@
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    const url = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
-
     Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "wdosbox.js"
     }).ready(function (fs, main) {
-      fs.extract(url).then(() => {
-        main(["-conf", "dosbox.conf"]);
-        console.log("✅ Game loaded successfully");
-      }).catch(err => {
-        console.error("❌ Failed to load:", err);
+      // לשמור את הקבצים בין הפעלות
+      fs.persist().then(() => {
+        // לטעון את המשחק מתוך הקובץ BIRD.jsdos
+        fs.extract("BIRD.jsdos").then(() => {
+          main(["-conf", "dosbox.conf"]);
+        });
       });
     });
   </script>
