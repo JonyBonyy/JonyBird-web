@@ -13,10 +13,17 @@
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
+    const url = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
+
     const dos = Dos(document.getElementById("dosbox"), {
       wdosboxUrl: "wdosbox.js"
     });
-   dos.run("https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos");
+
+    dos.run(url).then(() => {
+      console.log("✅ Game loaded successfully from " + url);
+    }).catch(err => {
+      console.error("❌ Failed to load game:", err);
+    });
   </script>
 </body>
 </html>
