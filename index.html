@@ -14,14 +14,17 @@
   <script src="js-dos.js"></script>
   <script>
     const ci = Dos(document.getElementById("dosbox"), {
-      url: "BIRD.jsdos",
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
       wdosboxUrl: "wdosbox.js"
     });
 
-    // אחרי שהמשתמש לחץ Play והאמולטור עלה
+    // אחרי לחיצה על Play והעלאת DOS
     ci.ready((fs, main) => {
-      // להריץ פקודות אחרי שה־DOS מוכן
-      main(["-c", "cycles 15000", "-c", "cd game", "-c", "flappyy.exe"]);
+      main([
+        "-c", "cycles 15000",
+        "-c", "cd game",
+        "-c", "flappyy.exe"
+      ]);
     });
   </script>
 </body>
