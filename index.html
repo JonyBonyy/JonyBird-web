@@ -13,12 +13,21 @@
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    Dos(document.getElementById("dosbox"), {
-      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html או בגיטהאב
+    // טוען את ה-BIRD.jsdos אוטומטית
+    const runner = Dos(document.getElementById("dosbox"), {
+      url: "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos",
       wdosboxUrl: "wdosbox.js"
-    }).ready(function (fs, main) {
-      // כאן אנחנו מחכים שהמשתמש ילחץ Play
-      fs.createFile("dosbox.conf", `
+    });
+
+    let started = false; // דגל כדי למנוע ריצות חוזרות
+
+    // מאזין ל-Play (הלחיצה הראשונה על ה-dosbox)
+    document.getElementById("dosbox").addEventListener("click", () => {
+      if (started) return; // אם כבר רץ, אל תעשה שוב
+      started = true;
+
+      runner.ready(async (fs, main) => {
+        await fs.createFile("dosbox.conf", `
 [cpu]
 cycles=15000
 
@@ -27,8 +36,7 @@ mount c .
 c:
 cd game
 flappyy.exe
-      `).then(() => {
-        // כשמוכן, מריצים את המשחק עם הקונפיג החדש
+        `);
         main(["-conf", "dosbox.conf"]);
       });
     });
