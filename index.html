@@ -13,13 +13,14 @@
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    Dos(document.getElementById("dosbox"), {
-      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
-      wdosboxUrl: "wdosbox.js"
+    // קובץ ההגדרות שדורש את flappyy.exe ומגדיר מהירות cycles=15000
+    const conf = `
+[sdl]
+fullscreen=false
+autolock=true
 
-      // ניצור קובץ dosbox.conf מותאם אישית
-      const conf = `
-[cpu]
+[dosbox]
+memsize=16
 cycles=15000
 
 [autoexec]
@@ -27,10 +28,13 @@ mount c .
 c:
 flappyy.exe
 `;
-      await ci.fs.createFile("dosbox.conf", conf);
 
-      // נריץ את המשחק עם הקונפיג החדש
-      await ci.main(["-conf", "dosbox.conf"]);
+    Dos(document.getElementById("dosbox"), {
+      url: "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos",
+      wdosboxUrl: "wdosbox.js"
+    }).ready((fs, main) => {
+      fs.createFile("dosbox.conf", conf);
+      main(["-conf", "dosbox.conf"]);
     });
   </script>
 </body>
