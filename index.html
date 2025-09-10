@@ -14,10 +14,10 @@
   <script src="js-dos.js"></script>
   <script>
     Dos(document.getElementById("dosbox"), {
-      url: "BIRD.jsdos",   // טוען את המשחק אוטומטית
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
       wdosboxUrl: "wdosbox.js"
-    }).ready(async (fs, main) => {
-      // ניצור קובץ dosbox.conf מותאם
+
+      // ניצור קובץ dosbox.conf מותאם אישית
       const conf = `
 [cpu]
 cycles=15000
@@ -27,10 +27,10 @@ mount c .
 c:
 flappyy.exe
 `;
-      await fs.createFile("dosbox.conf", conf);
+      await ci.fs.createFile("dosbox.conf", conf);
 
       // נריץ את המשחק עם הקונפיג החדש
-      await main(["-conf", "dosbox.conf"]);
+      await ci.main(["-conf", "dosbox.conf"]);
     });
   </script>
 </body>
