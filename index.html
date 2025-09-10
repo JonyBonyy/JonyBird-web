@@ -18,13 +18,15 @@
       wdosboxUrl: "wdosbox.js"
     });
 
-    // אחרי לחיצה על Play והעלאת DOS
+    // מחכה שהמשחק באמת יתחיל לרוץ אחרי Play
     ci.ready((fs, main) => {
-      main([
-        "-c", "cycles 15000",
-        "-c", "cd game",
-        "-c", "flappyy.exe"
-      ]);
+      setTimeout(() => {
+        main([
+          "-c", "cycles 15000",
+          "-c", "cd game",
+          "-c", "flappyy.exe"
+        ]);
+      }, 1000); // דיליי קטן כדי למנוע מסך שחור
     });
   </script>
 </body>
