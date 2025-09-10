@@ -13,32 +13,9 @@
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    // טוען את ה-BIRD.jsdos אוטומטית
-    const runner = Dos(document.getElementById("dosbox"), {
-      url: "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos",
+    Dos(document.getElementById("dosbox"), {
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
       wdosboxUrl: "wdosbox.js"
-    });
-
-    let started = false; // דגל כדי למנוע ריצות חוזרות
-
-    // מאזין ל-Play (הלחיצה הראשונה על ה-dosbox)
-    document.getElementById("dosbox").addEventListener("click", () => {
-      if (started) return; // אם כבר רץ, אל תעשה שוב
-      started = true;
-
-      runner.ready(async (fs, main) => {
-        await fs.createFile("dosbox.conf", `
-[cpu]
-cycles=15000
-
-[autoexec]
-mount c .
-c:
-cd game
-flappyy.exe
-        `);
-        main(["-conf", "dosbox.conf"]);
-      });
     });
   </script>
 </body>
