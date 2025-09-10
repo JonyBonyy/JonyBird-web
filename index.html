@@ -14,19 +14,25 @@
   <script src="js-dos.js"></script>
   <script>
     const ci = Dos(document.getElementById("dosbox"), {
-      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
+      url: "BIRD.jsdos",
       wdosboxUrl: "wdosbox.js"
     });
 
-    // מחכה שהמשחק באמת יתחיל לרוץ אחרי Play
     ci.ready((fs, main) => {
+      console.log("DOSBox ready!");
+
+      // מחכים 2 שניות אחרי Play כדי להיות בטוחים שהוא עלה
       setTimeout(() => {
+        console.log("Sending commands...");
         main([
+          "-c", "echo === AUTORUN START ===",
           "-c", "cycles 15000",
+          "-c", "dir",
           "-c", "cd game",
+          "-c", "dir",
           "-c", "flappyy.exe"
         ]);
-      }, 1000); // דיליי קטן כדי למנוע מסך שחור
+      }, 2000);
     });
   </script>
 </body>
