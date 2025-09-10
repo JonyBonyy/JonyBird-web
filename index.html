@@ -5,33 +5,17 @@
   <title>JonyBird</title>
   <link rel="stylesheet" href="js-dos.css">
   <style>
-    body { margin: 0; background: black; display: flex; flex-direction: column; align-items: center; }
-    #dosbox { width: 90vw; height: 80vh; margin-top: 10px; }
-    button { margin-top: 20px; padding: 10px 20px; font-size: 18px; }
+    body { margin: 0; background: black; }
+    #dosbox { width: 100vw; height: 100vh; }
   </style>
 </head>
 <body>
-  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    const ci = Dos(document.getElementById("dosbox"), {
+    Dos(document.getElementById("dosbox"), {
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
       wdosboxUrl: "wdosbox.js"
-    });
-
-    document.getElementById("play").addEventListener("click", () => {
-      ci.run("BIRD.jsdos").then(main => {
-        console.log("Game loaded!");
-        // נותנים שניה ל-DOSBox ואז מריצים פקודות
-        setTimeout(() => {
-          main([
-            "-c", "echo === AUTORUN START ===",
-            "-c", "cycles 15000",
-            "-c", "cd game",
-            "-c", "flappyy.exe"
-          ]);
-        }, 1000);
-      });
     });
   </script>
 </body>
