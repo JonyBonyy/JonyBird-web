@@ -7,125 +7,31 @@
   <style>
     body { margin: 0; background: black; }
     #dosbox { width: 100vw; height: 100vh; }
-    /* אפשר לשנות גודל / גבול כאן */
   </style>
 </head>
 <body>
   <div id="dosbox"></div>
-
   <script src="js-dos.js"></script>
   <script>
-    (async () => {
-      const JSDS_URL = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
-      const CONF_CONTENT = `
+    Dos(document.getElementById("dosbox"), {
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html או בגיטהאב
+      wdosboxUrl: "wdosbox.js"
+    }).ready(function (fs, main) {
+      // כאן אנחנו מחכים שהמשתמש ילחץ Play
+      fs.createFile("dosbox.conf", `
 [cpu]
 cycles=15000
 
 [autoexec]
-mount c game
+mount c .
 c:
+cd game
 flappyy.exe
-`;
-
-      function textToUint8(str){
-        return new TextEncoder().encode(str);
-      }
-
-      try {
-        // תקרא את ה־Dos (ייתכן שיחזיר Promise או אובייקט סינכרוני)
-        const maybe = Dos(document.getElementById("dosbox"), { wdosboxUrl: "wdosbox.js" });
-        const obj = await Promise.resolve(maybe); // אם זה Promise -> נחכה, אם לא -> יפעל מייד
-
-        // v7-ish: אובייקט עם run + fs + main
-        if (obj && typeof obj.run === "function") {
-          console.log("Detected js-dos v7-style API");
-
-          // ננסה לטעון ישירות מה-URL (הרצה מהירה)
-          try {
-            await obj.run(JSDS_URL);
-            console.log("Loaded via obj.run()");
-            // עכשיו נזרוק קונפיג חדש על ה־FS ונריץ שוב עם main אם נרצה:
-            try {
-              // לחילופין אפשר להחליף dosbox.conf אחרי ההרצה:
-              const data = await (await fetch(JSDS_URL)).arrayBuffer();
-              await obj.fs.createFile("BIRD.jsdos", new Uint8Array(data)); // מעתיקים את הארכיון ל־FS
-              await obj.fs.extract("BIRD.jsdos"); // מחלץ את הארכיון לתוך FS
-              await obj.fs.createFile("dosbox.conf", textToUint8(CONF_CONTENT));
-              await obj.main(["-conf","dosbox.conf"]);
-              console.log("Wrote custom dosbox.conf and ran main()");
-            } catch(e2){
-              console.warn("Could not overwrite conf after run():", e2);
-            }
-            return;
-          } catch (e) {
-            console.warn("obj.run failed, will try manual fetch+extract:", e);
-            // נמשיך לנסות דרך fs.createFile + extract + main
-          }
-
-          // Manual fetch -> save -> extract -> create conf -> main
-          const arr = new Uint8Array(await (await fetch(JSDS_URL)).arrayBuffer());
-          await obj.fs.createFile("BIRD.jsdos", arr);
-          console.log("Saved BIRD.jsdos into virtual FS");
-          await obj.fs.extract("BIRD.jsdos");
-          console.log("Extracted BIRD.jsdos");
-          await obj.fs.createFile("dosbox.conf", textToUint8(CONF_CONTENT));
-          console.log("Wrote dosbox.conf in virtual FS");
-          await obj.main(["-conf","dosbox.conf"]);
-          console.log("Started game with custom conf (v7 flow)");
-          return;
-        }
-
-        // v6-ish: הממשק הישן שמחזיר אובייקט עם .ready()
-        if (maybe && typeof maybe.ready === "function") {
-          console.log("Detected js-dos v6-style API");
-          maybe.ready(async (fs, main) => {
-            try {
-              // נמחוק/נחליף קבצים אם קיימים (מנסים ליצור מחדש את הארכיון)
-              try {
-                // fetch the jsdos and write into FS
-                const data = new Uint8Array(await (await fetch(JSDS_URL)).arrayBuffer());
-                await fs.createFile("BIRD.jsdos", data);
-                console.log("Saved BIRD.jsdos into FS (v6)");
-              } catch (e) {
-                console.error("Failed to fetch/write BIRD.jsdos (v6):", e);
-                return;
-              }
-
-              // extract local jsdos
-              try {
-                await fs.extract("BIRD.jsdos");
-                console.log("Extracted BIRD.jsdos (v6)");
-              } catch (e) {
-                console.warn("fs.extract failed (maybe file already extracted):", e);
-              }
-
-              // כתיבת dosbox.conf מותאם
-              try {
-                await fs.createFile("dosbox.conf", textToUint8(CONF_CONTENT));
-                console.log("Wrote dosbox.conf (v6)");
-              } catch (e) {
-                console.warn("Failed to create dosbox.conf (v6):", e);
-              }
-
-              // להריץ עם הקונפיג החדש
-              try {
-                main(["-conf","dosbox.conf"]);
-                console.log("Started game with custom conf (v6 flow)");
-              } catch (e) {
-                console.error("Failed to main() (v6):", e);
-              }
-            } catch (outer) {
-              console.error("Unexpected error in ready callback:", outer);
-            }
-          });
-          return;
-        }
-
-        console.error("Unknown js-dos API. 'run' and 'ready' not found.", maybe);
-      } catch (e) {
-        console.error("Fatal error initializing js-dos:", e);
-      }
-    })();
+      `).then(() => {
+        // כשמוכן, מריצים את המשחק עם הקונפיג החדש
+        main(["-conf", "dosbox.conf"]);
+      });
+    });
   </script>
 </body>
 </html>
