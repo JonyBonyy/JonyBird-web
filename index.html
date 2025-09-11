@@ -18,6 +18,11 @@
   <script>
     document.getElementById('play').addEventListener('click', async function () {
       this.disabled = true;
+
+      Dos(document.getElementById("dosbox"), {
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
+      wdosboxUrl: "wdosbox.js"
+        
       try {
         // run() מחזיר CommandInterface (ci) ב-v7
         const ci = await Dos(document.getElementById('dosbox')).run('https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos');
