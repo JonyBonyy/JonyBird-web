@@ -42,11 +42,6 @@
 
   <script src="js-dos.js"></script>
   <script>
-    <script>
-    Dos(document.getElementById("dosbox"), {
-      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
-      wdosboxUrl: "wdosbox.js"
-    });
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
     document.getElementById('play').addEventListener('click', async function () {
@@ -57,6 +52,11 @@
       } catch (e) {
         console.error("Failed to start bundle:", e);
         this.disabled = false;
+        <script>
+    Dos(document.getElementById("dosbox"), {
+      url: "BIRD.jsdos",   // הקובץ צריך להיות באותה תיקיה של index.html
+      wdosboxUrl: "wdosbox.js"
+    });
       }
     });
   </script>
