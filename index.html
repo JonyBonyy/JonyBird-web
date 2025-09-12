@@ -1,66 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <title>JonyBird</title>
-  <link rel="stylesheet" href="js-dos.css">
+  <link rel="stylesheet" href="js-dos.css"/>
   <style>
-    body {
-      margin: 0;
-      background: black;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-      justify-content: center;
-    }
-    #dosbox {
-      width: 95vw;
-      height: 85vh;
-      margin-top: 15px;
-    }
-    #play {
-      margin-top: 10px;
-      padding: 14px 26px;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      background: #222;
-      border: 2px solid white;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #play:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
+    html, body { height:100%; margin:0; background: black; display:flex; align-items:center; justify-content:center; }
+    #dosbox { width:95vw; height:85vh; border:2px solid white; box-sizing:border-box; }
   </style>
 </head>
 <body>
-  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
-
   <script src="js-dos.js"></script>
   <script>
-    const bundleUrl = "BIRD.jsdos"; // שים את הקובץ ליד index.html
-
-    document.getElementById('play').addEventListener('click', async function () {
-      this.disabled = true;
+    (async () => {
       try {
-        const dos = Dos(document.getElementById("dosbox"), { wdosboxUrl: "wdosbox.js" });
-        const ci = await dos.ready;
-        await ci.run(bundleUrl); // זה ה-API הנכון ב-v7
-        console.log("Bundle started, CI ready");
-      } catch (e) {
-        console.error("Failed to start bundle:", e);
-        this.disabled = false;
+        await Dos(document.getElementById("dosbox")).run("https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos");
+        console.log("Bundle run succeeded");
+      } catch(e) {
+        console.error("Bundle run failed:", e);
       }
-    });
-
-    // אוטומטי בלי ללחוץ כפתור
-    window.addEventListener("load", async () => {
-      document.getElementById("play").click();
-    });
+    })();
   </script>
 </body>
 </html>
