@@ -1,109 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"/>
   <title>JonyBird</title>
-  <link rel="stylesheet" href="js-dos.css" />
+  <link rel="stylesheet" href="js-dos.css"/>
   <style>
-    html,body { height:100%; margin:0; background:black; }
-    .wrap { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-    #dosbox { width:95vw; height:85vh; border:2px solid #fff; box-sizing:border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    #dosbox {
+      width: 95vw;
+      height: 85vh;
+      border: 2px solid white;
+      box-sizing: border-box;
+    }
     #play {
-      padding: 14px 30px;
-      font-size: 32px;           /* bigger */
-      font-weight:700;
-      color: #fff;               /* white text */
+      margin-bottom: 12px;
+      padding: 16px 32px;
+      font-size: 30px;
+      color: white;
       background: #111;
-      border: 3px solid #fff;
+      border: 3px solid white;
       border-radius: 10px;
       cursor: pointer;
-      margin-bottom: 12px;
     }
-    #play:disabled { opacity:0.5; cursor:default; }
-    #status { color:#ddd; margin-top:6px; font-family:monospace; font-size:14px; }
+    #play:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    #status {
+      color: #ccc;
+      margin-top: 8px;
+      font-family: monospace;
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <button id="play">▶ Play JonyBird</button>
-    <div id="dosbox"></div>
-    <div id="status">Waiting for bundle...</div>
-  </div>
+  <button id="play">▶ Play JonyBird</button>
+  <div id="dosbox"></div>
+  <div id="status">Waiting...</div>
 
   <script src="js-dos.js"></script>
   <script>
-    (async function () {
-      // === CONFIG ===
-      // raw.githubusercontent URL for your BIRD.jsdos (change if different)
+    (async function(){
       const bundleUrl = "https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos";
-
-      // If your wdosbox.js and other js-dos files are in the same dir as index.html, this is fine.
-      // If not, change wdosboxUrl to the correct path (e.g. "./js-dos/wdosbox.js" or a CDN link).
       const wdosboxUrl = "wdosbox.js";
 
-      const playBtn = document.getElementById("play");
+      const btn = document.getElementById("play");
       const status = document.getElementById("status");
       const container = document.getElementById("dosbox");
 
-      let bundleBytes = null;
+      btn.disabled = false;
 
-      // fetch the bundle (ArrayBuffer -> Uint8Array). show progress / errors.
-      async function fetchBundle() {
-        status.textContent = "Downloading bundle...";
-        try {
-          const r = await fetch(bundleUrl);
-          if (!r.ok) throw new Error("Fetch failed: " + r.status + " " + r.statusText);
-          const ab = await r.arrayBuffer();
-          bundleBytes = new Uint8Array(ab);
-          status.textContent = "Bundle ready (" + (bundleBytes.length >> 10) + " KB). Click Play.";
-          playBtn.disabled = false;
-        } catch (err) {
-          console.error("bundle fetch error", err);
-          status.textContent = "Failed to fetch bundle: " + err.message;
-          playBtn.disabled = true;
-        }
-      }
-
-      // create + start the player using initFs with the bundle bytes.
-      // We set autoStart: true so that because Play is a user gesture the emulator can begin immediately.
-      async function startPlayerWithBundle() {
-        if (!bundleBytes) { status.textContent = "Bundle not ready."; return; }
-        playBtn.disabled = true;
-        status.textContent = "Starting player...";
+      btn.addEventListener("click", async function(){
+        btn.disabled = true;
+        status.textContent = "Loading bundle...";
 
         try {
-          // Create player and inject bundle into initial FS. autoStart:true will start emulation immediately (allowed since this is inside click handler)
-          const props = Dos(container, {
-            wdosboxUrl,
-            initFs: [bundleBytes],       // give the bundle bytes to js-dos BEFORE start (this ensures .jsdos/dosbox.conf is visible)
-            autoStart: true,             // start right away (user clicked)
-            onEvent: (ev, arg) => {
-              console.log("js-dos event", ev, arg);
-              if (ev === "emu-ready") status.textContent = "Emulator ready";
-              if (ev === "bnd-play") status.textContent = "Play pressed (bundle is starting)";
-              if (ev === "ci-ready") status.textContent = "Game running (ci-ready)";
-            }
-          });
+          // כאן עושים run עם ה־bundle URL
+          const ci = await Dos(container).run(bundleUrl, { wdosboxUrl: wdosboxUrl });
+          
+          status.textContent = "Bundle loaded and running";
 
-          // props is the DosProps object — we don't need to call .run because bundle was provided via initFs.
-          // If your bundle's .jsdos/dosbox.conf contains [autoexec] with your commands, it will run now.
-          status.textContent = "Player created — bundle should auto-run (see console).";
-        } catch (e) {
-          console.error("start failed", e);
-          status.textContent = "Start failed: " + e.message;
-          playBtn.disabled = false;
+          // אם autoexec בתוך bundle תקין, המשחק יתחיל אוטומטית.
+        } catch(e) {
+          console.error("run failed:", e);
+          status.textContent = "Run failed: " + e.message;
+          btn.disabled = false;
         }
-      }
-
-      // initial state
-      playBtn.disabled = true;
-      playBtn.addEventListener("click", startPlayerWithBundle);
-
-      // start fetch in background immediately so the bundle is ready once the user clicks Play
-      await fetchBundle();
-
-      // OPTIONAL: if you want to auto-click Play on load (not recommended because of some browser restrictions), uncomment:
-      // window.addEventListener("load", () => { if (!playBtn.disabled) playBtn.click(); });
+      });
     })();
   </script>
 </body>
