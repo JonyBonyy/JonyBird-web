@@ -5,36 +5,53 @@
   <title>JonyBird</title>
   <link rel="stylesheet" href="js-dos.css">
   <style>
-    body { margin: 0; background: black; }
-    #dosbox { width: 100vw; height: 100vh; }
+    body {
+      margin: 0;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      justify-content: center;
+    }
+    #dosbox {
+      width: 95vw;
+      height: 85vh;
+      margin-top: 15px;
+    }
+    #play {
+      margin-top: 10px;
+      padding: 14px 26px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      background: #222;
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #play:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
   </style>
 </head>
 <body>
+  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
+
   <script src="js-dos.js"></script>
   <script>
-    // 1. טוען אוטומטית את הקובץ BIRD.jsdos
-    const runner = Dos(document.getElementById("dosbox"), {
-      url: "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos",
-      wdosboxUrl: "wdosbox.js"
-    });
+    const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    // 2. מאזין לאירוע לחיצה (Play). ברגע שנלחץ — מריץ את dosbox.conf
-    document.getElementById("dosbox").addEventListener("click", async () => {
-      if (runner && typeof runner.ready === "function") {
-        runner.ready(async (fs, main) => {
-          await fs.createFile("dosbox.conf", `
-[cpu]
-cycles=15000
-
-[autoexec]
-mount c .
-c:
-cd game
-flappyy.exe
-          `);
-          main(["-conf", "dosbox.conf"]);
-        });
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
+      try {
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        console.log("Bundle started, CI ready");
+      } catch (e) {
+        console.error("Failed to start bundle:", e);
+        this.disabled = false;
       }
     });
   </script>
