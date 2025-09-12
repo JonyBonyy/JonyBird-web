@@ -2,60 +2,37 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>JonyBird</title>
-  <!-- js-dos v7 CSS -->
+  <title>Test js-dos v7</title>
   <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos.css">
   <style>
     body {
       margin: 0;
-      background: black;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
       height: 100vh;
-      justify-content: center;
+      background: black;
     }
     #dosbox {
-      width: 95vw;
-      height: 85vh;
-      margin-top: 15px;
-    }
-    #play {
-      margin-top: 10px;
-      padding: 14px 26px;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      background: #222;
-      border: 2px solid white;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #play:disabled {
-      opacity: 0.5;
-      cursor: default;
+      width: 90vw;
+      height: 90vh;
     }
   </style>
 </head>
 <body>
-  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
 
-  <!-- js-dos v7 JS -->
   <script src="https://js-dos.com/v7/build/releases/latest/js-dos.js"></script>
   <script>
-    const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
-
-    document.getElementById('play').addEventListener('click', async function () {
-      this.disabled = true;
+    (async () => {
+      const bundleUrl = "https://js-dos.com/v7/build/games/doom.jsdos"; // דוגמה רשמית שעובדת
       try {
-        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        const ci = await Dos(document.getElementById("dosbox")).run(bundleUrl);
         console.log("Bundle started, CI ready:", ci);
       } catch (e) {
         console.error("Failed to start bundle:", e);
-        this.disabled = false;
       }
-    });
+    })();
   </script>
 </body>
 </html>
