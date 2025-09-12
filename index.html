@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>JonyBird</title>
-  <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
+  <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos.css">
   <style>
     body {
       margin: 0;
@@ -40,17 +40,25 @@
   <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
 
-  <!-- ספריות של js-dos גרסה 6 -->
-  <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
+  <!-- js-dos v7 -->
+  <script src="https://js-dos.com/v7/build/releases/latest/js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    document.getElementById('play').addEventListener('click', function () {
+    document.getElementById('play').addEventListener('click', async function () {
       this.disabled = true;
-      Dos(document.getElementById("dosbox"), {
-        url: bundleUrl,
-        wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js"
-      });
+      try {
+        // ב-v7 משתמשים ב-DosFactory
+        const ci = await Dos(document.getElementById("dosbox"), {
+          wdosboxUrl: "https://js-dos.com/v7/build/wdosbox/wdosbox.js"
+        });
+
+        await ci.run(bundleUrl);
+        console.log("Bundle started, CI ready");
+      } catch (e) {
+        console.error("Failed to start bundle:", e);
+        this.disabled = false;
+      }
     });
   </script>
 </body>
