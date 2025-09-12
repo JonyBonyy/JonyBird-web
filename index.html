@@ -45,18 +45,20 @@
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    document.getElementById('play').addEventListener('click', async function () {
+    document.getElementById("play").addEventListener("click", async function () {
       this.disabled = true;
       try {
-        // יצירת אינסטנס חדש
         const ci = await Dos(document.getElementById("dosbox"), {
           wdosboxUrl: "https://js-dos.com/v7/build/wdosbox/wdosbox.js"
         });
 
-        // הפעלת הבאנדל
+        // חילוץ החבילה
         await ci.fs.extract(bundleUrl);
-        ci.main(["-c", "flappyy.exe"]); // שם האקזי בתוך ה-bundle
-        console.log("Bundle started, CI ready");
+
+        // הרצת המשחק (FLAPPYY.EXE)
+        ci.main(["-c", "FLAPPYY.EXE"]);
+
+        console.log("JonyBird started (FLAPPYY.EXE)");
       } catch (e) {
         console.error("Failed to start bundle:", e);
         this.disabled = false;
