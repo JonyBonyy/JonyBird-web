@@ -21,13 +21,13 @@
     }
     #play {
       margin-top: 10px;
-      padding: 14px 28px;
+      padding: 14px 26px;
       font-size: 28px;
       font-weight: bold;
       color: white;
       background: #222;
       border: 2px solid white;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
     }
     #play:disabled {
@@ -42,28 +42,18 @@
 
   <script src="js-dos.js"></script>
   <script>
-    // קישור ישיר ל-BIRD.jsdos מה-GitHub שלך (חשוב שיהיה RAW!)
-    const jsdosUrl = "https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos";
+    const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    async function startGame() {
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
       try {
-        const ci = await Dos(document.getElementById("dosbox"), {
-          url: jsdosUrl,
-          wdosboxUrl: "wdosbox.js"
-        });
-        console.log("Game loaded successfully");
-        document.getElementById("play").disabled = true;
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        console.log("Bundle started, CI ready");
       } catch (e) {
-        console.error("Failed to load game:", e);
-        document.getElementById("play").disabled = false;
+        console.error("Failed to start bundle:", e);
+        this.disabled = false;
       }
-    }
-
-    // הפעלה בלחיצה
-    document.getElementById("play").addEventListener("click", startGame);
-
-    // הפעלה אוטומטית בטעינה
-    window.addEventListener("load", startGame);
+    });
   </script>
 </body>
 </html>
