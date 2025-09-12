@@ -42,17 +42,24 @@
 
   <script src="js-dos.js"></script>
   <script>
-    const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
+    const bundleUrl = "BIRD.jsdos"; // שים את הקובץ ליד index.html
 
     document.getElementById('play').addEventListener('click', async function () {
       this.disabled = true;
       try {
-        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        const dos = Dos(document.getElementById("dosbox"), { wdosboxUrl: "wdosbox.js" });
+        const ci = await dos.ready;
+        await ci.run(bundleUrl); // זה ה-API הנכון ב-v7
         console.log("Bundle started, CI ready");
       } catch (e) {
         console.error("Failed to start bundle:", e);
         this.disabled = false;
       }
+    });
+
+    // אוטומטי בלי ללחוץ כפתור
+    window.addEventListener("load", async () => {
+      document.getElementById("play").click();
     });
   </script>
 </body>
