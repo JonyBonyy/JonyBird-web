@@ -48,12 +48,14 @@
     document.getElementById('play').addEventListener('click', async function () {
       this.disabled = true;
       try {
-        // ב-v7 משתמשים ב-DosFactory
+        // יצירת אינסטנס חדש
         const ci = await Dos(document.getElementById("dosbox"), {
           wdosboxUrl: "https://js-dos.com/v7/build/wdosbox/wdosbox.js"
         });
 
-        await ci.run(bundleUrl);
+        // הפעלת הבאנדל
+        await ci.fs.extract(bundleUrl);
+        ci.main(["-c", "flappyy.exe"]); // שם האקזי בתוך ה-bundle
         console.log("Bundle started, CI ready");
       } catch (e) {
         console.error("Failed to start bundle:", e);
