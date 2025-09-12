@@ -1,81 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8">
   <title>JonyBird</title>
-  <link rel="stylesheet" href="js-dos.css"/>
+  <link rel="stylesheet" href="js-dos.css">
   <style>
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
       background: black;
       display: flex;
-      align-items: center;
-      justify-content: center;
       flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      justify-content: center;
     }
     #dosbox {
       width: 95vw;
       height: 85vh;
-      border: 2px solid white;
-      box-sizing: border-box;
+      margin-top: 15px;
     }
     #play {
-      margin-bottom: 12px;
-      padding: 16px 32px;
-      font-size: 30px;
+      margin-top: 10px;
+      padding: 14px 26px;
+      font-size: 28px;
+      font-weight: bold;
       color: white;
-      background: #111;
-      border: 3px solid white;
-      border-radius: 10px;
+      background: #222;
+      border: 2px solid white;
+      border-radius: 8px;
       cursor: pointer;
     }
     #play:disabled {
       opacity: 0.5;
       cursor: default;
     }
-    #status {
-      color: #ccc;
-      margin-top: 8px;
-      font-family: monospace;
-    }
   </style>
 </head>
 <body>
   <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
-  <div id="status">Waiting...</div>
 
   <script src="js-dos.js"></script>
   <script>
-    (async function(){
-      const bundleUrl = "https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos";
-      const wdosboxUrl = "wdosbox.js";
+    const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-      const btn = document.getElementById("play");
-      const status = document.getElementById("status");
-      const container = document.getElementById("dosbox");
-
-      btn.disabled = false;
-
-      btn.addEventListener("click", async function(){
-        btn.disabled = true;
-        status.textContent = "Loading bundle...";
-
-        try {
-          // כאן עושים run עם ה־bundle URL
-          const ci = await Dos(container).run(bundleUrl, { wdosboxUrl: wdosboxUrl });
-          
-          status.textContent = "Bundle loaded and running";
-
-          // אם autoexec בתוך bundle תקין, המשחק יתחיל אוטומטית.
-        } catch(e) {
-          console.error("run failed:", e);
-          status.textContent = "Run failed: " + e.message;
-          btn.disabled = false;
-        }
-      });
-    })();
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
+      try {
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        console.log("Bundle started, CI ready");
+      } catch (e) {
+        console.error("Failed to start bundle:", e);
+        this.disabled = false;
+      }
+    });
   </script>
 </body>
 </html>
