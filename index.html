@@ -21,13 +21,13 @@
     }
     #play {
       margin-top: 10px;
-      padding: 14px 26px;
+      padding: 14px 28px;
       font-size: 28px;
       font-weight: bold;
       color: white;
       background: #222;
       border: 2px solid white;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
     }
     #play:disabled {
@@ -42,6 +42,7 @@
 
   <script src="js-dos.js"></script>
   <script>
+    // קישור ישיר ל-BIRD.jsdos מה-GitHub שלך (חשוב שיהיה RAW!)
     const jsdosUrl = "https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos";
 
     async function startGame() {
@@ -50,18 +51,18 @@
           url: jsdosUrl,
           wdosboxUrl: "wdosbox.js"
         });
-        console.log("Game loaded from GitHub:", jsdosUrl);
+        console.log("Game loaded successfully");
         document.getElementById("play").disabled = true;
       } catch (e) {
-        console.error("Failed to start:", e);
+        console.error("Failed to load game:", e);
         document.getElementById("play").disabled = false;
       }
     }
 
-    // לחיצה על הכפתור
-    document.getElementById('play').addEventListener('click', startGame);
+    // הפעלה בלחיצה
+    document.getElementById("play").addEventListener("click", startGame);
 
-    // הפעלה אוטומטית
+    // הפעלה אוטומטית בטעינה
     window.addEventListener("load", startGame);
   </script>
 </body>
