@@ -5,35 +5,34 @@
   <title>JonyBird</title>
   <link rel="stylesheet" href="js-dos.css">
   <style>
-    body { 
-      margin: 0; 
-      background: black; 
-      display:flex; 
-      flex-direction:column; 
-      align-items:center; 
-      height:100vh; 
-      color: white; 
-      font-family: sans-serif;
+    body {
+      margin: 0;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      justify-content: center;
     }
-    #dosbox { 
-      width: 90vw; 
-      height: 80vh; 
-      margin-top:10px; 
+    #dosbox {
+      width: 95vw;
+      height: 85vh;
+      margin-top: 15px;
+    }
+    #play {
+      margin-top: 10px;
+      padding: 14px 26px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      background: #222;
       border: 2px solid white;
-    }
-    #play { 
-      margin-top: 8px; 
-      padding:10px 18px; 
-      font-size:22px; 
-      font-weight:bold; 
-      color:white; 
-      background:black; 
-      border:2px solid white; 
-      cursor:pointer; 
+      border-radius: 8px;
+      cursor: pointer;
     }
     #play:disabled {
       opacity: 0.5;
-      cursor: not-allowed;
+      cursor: default;
     }
   </style>
 </head>
@@ -43,19 +42,27 @@
 
   <script src="js-dos.js"></script>
   <script>
-    document.getElementById('play').addEventListener('click', async function () {
-      this.disabled = true;
+    const jsdosUrl = "https://raw.githubusercontent.com/JonyBonyy/JonyBird-web/main/BIRD.jsdos";
+
+    async function startGame() {
       try {
-        const ci = await Dos(document.getElementById('dosbox'), {
-          url: "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos",
+        const ci = await Dos(document.getElementById("dosbox"), {
+          url: jsdosUrl,
           wdosboxUrl: "wdosbox.js"
         });
-        console.log("BIRD.jsdos loaded from GitHub");
+        console.log("Game loaded from GitHub:", jsdosUrl);
+        document.getElementById("play").disabled = true;
       } catch (e) {
-        console.error("Failed to start JonyBird:", e);
-        this.disabled = false;
+        console.error("Failed to start:", e);
+        document.getElementById("play").disabled = false;
       }
-    });
+    }
+
+    // לחיצה על הכפתור
+    document.getElementById('play').addEventListener('click', startGame);
+
+    // הפעלה אוטומטית
+    window.addEventListener("load", startGame);
   </script>
 </body>
 </html>
