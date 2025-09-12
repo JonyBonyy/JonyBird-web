@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>JonyBird</title>
+  <!-- js-dos v7 CSS -->
   <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos.css">
   <style>
     body {
@@ -40,7 +41,7 @@
   <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
 
-  <!-- js-dos v7 -->
+  <!-- js-dos v7 JS -->
   <script src="https://js-dos.com/v7/build/releases/latest/js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
@@ -48,17 +49,8 @@
     document.getElementById('play').addEventListener('click', async function () {
       this.disabled = true;
       try {
-        const ci = await Dos(document.getElementById('dosbox'), {
-          wdosboxUrl: "https://js-dos.com/v7/build/wdosbox/wdosbox.js"
-        });
-
-        // שולף את ה־BIRD.jsdos
-        await ci.fs.extract(bundleUrl);
-
-        // מריץ את קובץ ההתחלה מתוך החבילה
-        ci.main(["-c", "FLAPPYY.EXE"]);
-
-        console.log("Bundle started, CI ready");
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        console.log("Bundle started, CI ready:", ci);
       } catch (e) {
         console.error("Failed to start bundle:", e);
         this.disabled = false;
