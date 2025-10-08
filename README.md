@@ -2,5 +2,3 @@ for now to open the game in the site you need to download the BIRD.jsdos from my
 later i will make it work automatically (maybe).
 
 THE SITE ONLY WORKS IN PC FOR NOW
-
-Screencast_20251002_201744.webm
