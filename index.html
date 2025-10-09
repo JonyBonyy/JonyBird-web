@@ -34,34 +34,18 @@
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     
-    // Wait for js-dos to be fully loaded, then start the game
-    function startGame() {
-      if (typeof Dos === 'undefined') {
-        // js-dos not loaded yet, wait a bit longer
-        setTimeout(startGame, 100);
-        return;
-      }
-      
-      // js-dos is ready, start the game
+    setTimeout(function() {
       Dos(document.getElementById('dosbox'))
         .run(bundleUrl)
-        .then(function(ci) {
+        .then(function() {
           document.getElementById('loading').style.display = 'none';
-          console.log("Bundle started, CI ready");
         })
         .catch(function(e) {
-          console.error("Failed to start bundle:", e);
-          document.getElementById('loading').textContent = 'Failed to load game. Please refresh.';
+          document.getElementById('loading').textContent = 'Failed to load game';
           document.getElementById('loading').style.color = '#ff4444';
+          console.error(e);
         });
-    }
-    
-    // Start the game after DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', startGame);
-    } else {
-      startGame();
-    }
+    }, 500);
   </script>
 </body>
 </html>
