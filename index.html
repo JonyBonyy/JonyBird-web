@@ -19,30 +19,51 @@
       height: 85vh;
       margin-top: 15px;
     }
-    #loading {
-      color: white;
-      font-size: 24px;
+    #play {
+      margin-top: 10px;
+      padding: 14px 26px;
+      font-size: 28px;
       font-weight: bold;
-      margin-bottom: 20px;
+      color: white;
+      background: #222;
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #play:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
   </style>
 </head>
 <body>
-  <div id="loading">Loading JonyBird...</div>
+  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
+    // Embedded BIRD.jsdos as base64
+    const base64Bundle = "YOUR_BASE64_STRING_HERE";
     
-    // Auto-start on page load
-    window.addEventListener('load', async function() {
+    // Convert base64 to blob
+    function base64ToBlob(base64) {
+      const binaryString = atob(base64);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return new Blob([bytes], { type: 'application/octet-stream' });
+    }
+    
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
       try {
-        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
-        document.getElementById('loading').style.display = 'none';
+        const blob = base64ToBlob(base64Bundle);
+        const blobUrl = URL.createObjectURL(blob);
+        const ci = await Dos(document.getElementById('dosbox')).run(blobUrl);
         console.log("Bundle started, CI ready");
       } catch (e) {
         console.error("Failed to start bundle:", e);
-        document.getElementById('loading').textContent = "Failed to load game. Please refresh.";
+        this.disabled = false;
       }
     });
   </script>
