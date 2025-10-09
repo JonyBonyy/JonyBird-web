@@ -17,6 +17,23 @@
     #dosbox {
       width: 95vw;
       height: 85vh;
+      margin-top: 15px;
+    }
+    #play {
+      margin-top: 10px;
+      padding: 14px 26px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      background: #222;
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+    #play:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
     #loading {
       color: white;
@@ -28,24 +45,33 @@
 </head>
 <body>
   <div id="loading">Loading JonyBird...</div>
+  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
   
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     
-    setTimeout(function() {
-      Dos(document.getElementById('dosbox'))
-        .run(bundleUrl)
-        .then(function() {
-          document.getElementById('loading').style.display = 'none';
-        })
-        .catch(function(e) {
-          document.getElementById('loading').textContent = 'Failed to load game';
-          document.getElementById('loading').style.color = '#ff4444';
-          console.error(e);
-        });
-    }, 500);
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
+      document.getElementById('loading').style.display = 'none';
+      try {
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        console.log("Bundle started, CI ready");
+      } catch (e) {
+        console.error("Failed to start bundle:", e);
+        document.getElementById('loading').textContent = 'Failed to load game. Please refresh.';
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('loading').style.color = '#ff4444';
+        this.disabled = false;
+      }
+    });
+    
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('play').click();
+      }, 1000);
+    });
   </script>
 </body>
 </html>
