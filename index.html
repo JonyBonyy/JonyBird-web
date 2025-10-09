@@ -13,6 +13,7 @@
       align-items: center;
       height: 100vh;
       justify-content: center;
+      touch-action: manipulation; /* כדי למנוע זום או גרירה בטלפון */
     }
     #dosbox {
       width: 95vw;
@@ -43,17 +44,38 @@
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
+    let ci = null;
 
-    document.getElementById('play').addEventListener('click', async function () {
+    const playButton = document.getElementById('play');
+    const dosbox = document.getElementById('dosbox');
+
+    playButton.addEventListener('click', async function () {
       this.disabled = true;
       try {
-        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        ci = await Dos(dosbox).run(bundleUrl);
         console.log("Bundle started, CI ready");
+
+        // מוסיף תמיכה במסך מגע
+        document.body.addEventListener('touchstart', handleTouch);
+        document.body.addEventListener('mousedown', handleTouch); // גם למחשב
       } catch (e) {
         console.error("Failed to start bundle:", e);
         this.disabled = false;
       }
     });
+
+    function handleTouch() {
+      if (!ci) return;
+      // שולח סימולציה של מקש רווח (space)
+      ci.simulateKeyEvent({
+        keyCode: 32, // Spacebar
+        type: "keydown"
+      });
+      ci.simulateKeyEvent({
+        keyCode: 32,
+        type: "keyup"
+      });
+    }
   </script>
 </body>
 </html>
