@@ -19,22 +19,6 @@
       height: 85vh;
       margin-top: 15px;
     }
-    #play {
-      margin-top: 10px;
-      padding: 14px 26px;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      background: #222;
-      border: 2px solid white;
-      border-radius: 8px;
-      cursor: pointer;
-      display: none;
-    }
-    #play:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
     #loading {
       color: white;
       font-size: 24px;
@@ -45,46 +29,70 @@
 </head>
 <body>
   <div id="loading">Loading JonyBird...</div>
-  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
   
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     
-    console.log("[v0] Script loaded, checking if Dos is available");
-    console.log("[v0] Dos function exists:", typeof Dos !== 'undefined');
-    console.log("[v0] Bundle URL:", bundleUrl);
-    
-    document.getElementById('play').addEventListener('click', async function () {
-      console.log("[v0] Play button clicked");
-      this.disabled = true;
-      document.getElementById('loading').style.display = 'none';
-      
+    async function startGame() {
       try {
-        console.log("[v0] Attempting to create Dos instance...");
-        console.log("[v0] Dosbox element:", document.getElementById('dosbox'));
+        console.log("[v0] Attempting to start game with bundleUrl:", bundleUrl);
         
-        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
-        console.log("[v0] Bundle started successfully, CI ready");
+        // Try method 1: Direct call with await on Dos first
+        try {
+          console.log("[v0] Trying method 1: await Dos() then .run()");
+          const dos = await Dos(document.getElementById('dosbox'));
+          console.log("[v0] Dos instance created:", dos);
+          console.log("[v0] Dos instance type:", typeof dos);
+          console.log("[v0] Dos.run exists:", typeof dos.run);
+          
+          if (typeof dos.run === 'function') {
+            const ci = await dos.run(bundleUrl);
+            console.log("[v0] Method 1 succeeded!");
+            document.getElementById('loading').style.display = 'none';
+            return;
+          }
+        } catch (e) {
+          console.log("[v0] Method 1 failed:", e.message);
+        }
+        
+        // Try method 2: Dos with bundle URL as second parameter
+        try {
+          console.log("[v0] Trying method 2: Dos(element, bundleUrl)");
+          const ci = await Dos(document.getElementById('dosbox'), bundleUrl);
+          console.log("[v0] Method 2 succeeded!");
+          document.getElementById('loading').style.display = 'none';
+          return;
+        } catch (e) {
+          console.log("[v0] Method 2 failed:", e.message);
+        }
+        
+        // Try method 3: Dos with config object
+        try {
+          console.log("[v0] Trying method 3: Dos with config object");
+          const ci = await Dos(document.getElementById('dosbox'), {
+            url: bundleUrl
+          });
+          console.log("[v0] Method 3 succeeded!");
+          document.getElementById('loading').style.display = 'none';
+          return;
+        } catch (e) {
+          console.log("[v0] Method 3 failed:", e.message);
+        }
+        
+        throw new Error("All methods failed to load the game");
+        
       } catch (e) {
-        console.error("[v0] Failed to start bundle:", e);
-        console.error("[v0] Error message:", e.message);
-        console.error("[v0] Error stack:", e.stack);
-        
-        document.getElementById('loading').textContent = 'Failed to load game: ' + e.message;
-        document.getElementById('loading').style.display = 'block';
+        console.error("[v0] All attempts failed:", e);
+        document.getElementById('loading').textContent = 'Failed to load game. Check console for details.';
         document.getElementById('loading').style.color = '#ff4444';
-        this.disabled = false;
       }
-    });
+    }
     
     window.addEventListener('load', function() {
-      console.log("[v0] Window loaded, waiting 1 second before auto-clicking play");
-      setTimeout(function() {
-        console.log("[v0] Auto-clicking play button now");
-        document.getElementById('play').click();
-      }, 1000);
+      console.log("[v0] Window loaded, starting game in 1 second");
+      setTimeout(startGame, 1000);
     });
   </script>
 </body>
