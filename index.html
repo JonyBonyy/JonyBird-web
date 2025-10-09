@@ -19,7 +19,7 @@
       height: 85vh;
       margin-top: 15px;
     }
-    #loading {
+    #status {
       margin-top: 10px;
       padding: 14px 26px;
       font-size: 28px;
@@ -32,25 +32,27 @@
   </style>
 </head>
 <body>
-  <div id="loading">⏳ Loading JonyBird...</div>
+  <div id="status">⏳ Loading JonyBird...</div>
   <div id="dosbox"></div>
 
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    // Automatically start the game when page loads
-    window.addEventListener('load', async function () {
-      const loadingDiv = document.getElementById('loading');
+    // Wait a moment for js-dos to fully load, then auto-start
+    setTimeout(async function () {
+      const statusDiv = document.getElementById('status');
       try {
+        statusDiv.textContent = '🎮 Starting game...';
         const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
         console.log("Bundle started, CI ready");
-        loadingDiv.style.display = 'none'; // Hide loading message when game starts
+        statusDiv.style.display = 'none';
       } catch (e) {
         console.error("Failed to start bundle:", e);
-        loadingDiv.textContent = '❌ Failed to load game';
+        statusDiv.textContent = '❌ Error: ' + e.message;
+        console.log("Full error details:", e);
       }
-    });
+    }, 500);
   </script>
 </body>
 </html>
