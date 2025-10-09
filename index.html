@@ -13,7 +13,7 @@
       align-items: center;
       height: 100vh;
       justify-content: center;
-      touch-action: manipulation; /* כדי למנוע זום או גרירה בטלפון */
+      touch-action: manipulation;
     }
     #dosbox {
       width: 95vw;
@@ -45,6 +45,7 @@
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     let ci = null;
+    let canvas = null;
 
     const playButton = document.getElementById('play');
     const dosbox = document.getElementById('dosbox');
@@ -55,26 +56,30 @@
         ci = await Dos(dosbox).run(bundleUrl);
         console.log("Bundle started, CI ready");
 
-        // מוסיף תמיכה במסך מגע
-        document.body.addEventListener('touchstart', handleTouch);
-        document.body.addEventListener('mousedown', handleTouch); // גם למחשב
+        // מוצא את הקנבס של js-dos
+        canvas = dosbox.querySelector("canvas");
+
+        if (canvas) {
+          // נגיעה במסך → קפיצה / התחלה מחדש
+          canvas.addEventListener("touchstart", handleTap);
+          canvas.addEventListener("mousedown", handleTap); // גם למחשב
+        }
       } catch (e) {
         console.error("Failed to start bundle:", e);
         this.disabled = false;
       }
     });
 
-    function handleTouch() {
+    function handleTap(e) {
+      e.preventDefault();
       if (!ci) return;
-      // שולח סימולציה של מקש רווח (space)
-      ci.simulateKeyEvent({
-        keyCode: 32, // Spacebar
-        type: "keydown"
-      });
-      ci.simulateKeyEvent({
-        keyCode: 32,
-        type: "keyup"
-      });
+
+      // js-dos שומע על מקשים רק אם הם נשלחים ישירות לקנבס:
+      const keyboardEventDown = new KeyboardEvent("keydown", { key: " " });
+      const keyboardEventUp = new KeyboardEvent("keyup", { key: " " });
+
+      canvas.dispatchEvent(keyboardEventDown);
+      setTimeout(() => canvas.dispatchEvent(keyboardEventUp), 100);
     }
   </script>
 </body>
