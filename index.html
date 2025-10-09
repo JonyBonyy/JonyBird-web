@@ -19,22 +19,6 @@
       height: 85vh;
       margin-top: 15px;
     }
-    #play {
-      margin-top: 10px;
-      padding: 14px 26px;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      background: #222;
-      border: 2px solid white;
-      border-radius: 8px;
-      cursor: pointer;
-      display: none; /* Hide the button */
-    }
-    #play:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
     #loading {
       margin-top: 10px;
       padding: 14px 26px;
@@ -49,32 +33,25 @@
 </head>
 <body>
   <div id="loading">⏳ Loading JonyBird...</div>
-  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
 
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    document.getElementById('play').addEventListener('click', async function () {
-      this.disabled = true;
-      document.getElementById('loading').style.display = 'none';
+    // Start immediately when script runs
+    (async function() {
+      const loadingDiv = document.getElementById('loading');
       try {
+        loadingDiv.textContent = '🎮 Starting game...';
         const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
         console.log("Bundle started, CI ready");
+        loadingDiv.style.display = 'none';
       } catch (e) {
         console.error("Failed to start bundle:", e);
-        this.disabled = false;
-        document.getElementById('loading').textContent = '❌ Failed to load';
+        loadingDiv.textContent = '❌ Failed: ' + e.message;
       }
-    });
-
-    // Automatically click the button after page loads
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        document.getElementById('play').click();
-      }, 500);
-    });
+    })();
   </script>
 </body>
 </html>
