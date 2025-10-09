@@ -52,15 +52,27 @@
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     
+    console.log("[v0] Script loaded, checking if Dos is available");
+    console.log("[v0] Dos function exists:", typeof Dos !== 'undefined');
+    console.log("[v0] Bundle URL:", bundleUrl);
+    
     document.getElementById('play').addEventListener('click', async function () {
+      console.log("[v0] Play button clicked");
       this.disabled = true;
       document.getElementById('loading').style.display = 'none';
+      
       try {
+        console.log("[v0] Attempting to create Dos instance...");
+        console.log("[v0] Dosbox element:", document.getElementById('dosbox'));
+        
         const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
-        console.log("Bundle started, CI ready");
+        console.log("[v0] Bundle started successfully, CI ready");
       } catch (e) {
-        console.error("Failed to start bundle:", e);
-        document.getElementById('loading').textContent = 'Failed to load game. Please refresh.';
+        console.error("[v0] Failed to start bundle:", e);
+        console.error("[v0] Error message:", e.message);
+        console.error("[v0] Error stack:", e.stack);
+        
+        document.getElementById('loading').textContent = 'Failed to load game: ' + e.message;
         document.getElementById('loading').style.display = 'block';
         document.getElementById('loading').style.color = '#ff4444';
         this.disabled = false;
@@ -68,7 +80,9 @@
     });
     
     window.addEventListener('load', function() {
+      console.log("[v0] Window loaded, waiting 1 second before auto-clicking play");
       setTimeout(function() {
+        console.log("[v0] Auto-clicking play button now");
         document.getElementById('play').click();
       }, 1000);
     });
