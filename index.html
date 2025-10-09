@@ -39,19 +39,17 @@
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    setTimeout(async function () {
+    setTimeout(function () {
       const statusDiv = document.getElementById('status');
       try {
         statusDiv.textContent = '🎮 Starting game...';
         
-        // Try the emulators.pathPrefix method
-        emulators.pathPrefix = "https://cdn.jsdelivr.net/npm/emulators@latest/dist/";
-        const ci = await Dos(document.getElementById('dosbox'), {
-          wdosboxUrl: emulators.pathPrefix + "wdosbox.js",
-        }).run(bundleUrl);
-        
-        console.log("Bundle started, CI ready");
-        statusDiv.style.display = 'none';
+        Dos(document.getElementById('dosbox')).ready((fs, main) => {
+          fs.extract(bundleUrl).then(() => {
+            main(["-c", "BIRD.EXE"]);
+            statusDiv.style.display = 'none';
+          });
+        });
       } catch (e) {
         console.error("Failed to start bundle:", e);
         statusDiv.textContent = '❌ Error: ' + e.message;
