@@ -19,9 +19,23 @@
   <div id="dosbox"></div>
   <script src="js-dos.js"></script>
   <script>
-    Dos(document.getElementById("dosbox"), {
-      url: "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos"
-    });
+    (async function() {
+      try {
+        const ci = await Dos(document.getElementById("dosbox"), {
+          url: "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos"
+        });
+        
+        // Wait a moment for DOSBox to fully initialize
+        setTimeout(() => {
+          // Send commands to mount and run the game
+          ci.exec("mount c .");
+          ci.exec("c:");
+          ci.exec("flappyy.exe");
+        }, 1000);
+      } catch (e) {
+        console.error("Failed to load:", e);
+      }
+    })();
   </script>
 </body>
 </html>
