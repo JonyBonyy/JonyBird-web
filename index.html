@@ -46,40 +46,36 @@
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     let ci = null;
     let canvas = null;
-
     const playButton = document.getElementById('play');
     const dosbox = document.getElementById('dosbox');
 
     playButton.addEventListener('click', async function () {
-      this.disabled = true;
+      // יוצר קנבס מראש כדי שהדפדפן יזהה אינטראקציה
+      playButton.style.display = 'none';
+      dosbox.innerHTML = '<canvas id="dos-canvas" style="width:95vw; height:85vh;"></canvas>';
+      canvas = document.getElementById('dos-canvas');
+
       try {
-        ci = await Dos(dosbox).run(bundleUrl);
+        ci = await Dos(canvas).run(bundleUrl);
         console.log("Bundle started, CI ready");
 
-        // מוצא את הקנבס של js-dos
-        canvas = dosbox.querySelector("canvas");
-
-        if (canvas) {
-          // נגיעה במסך → קפיצה / התחלה מחדש
-          canvas.addEventListener("touchstart", handleTap);
-          canvas.addEventListener("mousedown", handleTap); // גם למחשב
-        }
+        // מוסיף שליטה דרך נגיעה או לחיצה
+        canvas.addEventListener("touchstart", handleTap);
+        canvas.addEventListener("mousedown", handleTap);
       } catch (e) {
         console.error("Failed to start bundle:", e);
-        this.disabled = false;
+        playButton.style.display = 'block';
       }
     });
 
     function handleTap(e) {
       e.preventDefault();
-      if (!ci) return;
-
-      // js-dos שומע על מקשים רק אם הם נשלחים ישירות לקנבס:
-      const keyboardEventDown = new KeyboardEvent("keydown", { key: " " });
-      const keyboardEventUp = new KeyboardEvent("keyup", { key: " " });
-
-      canvas.dispatchEvent(keyboardEventDown);
-      setTimeout(() => canvas.dispatchEvent(keyboardEventUp), 100);
+      if (!canvas) return;
+      // מדמה לחיצה על מקש רווח
+      const keyDown = new KeyboardEvent("keydown", { key: " " });
+      const keyUp = new KeyboardEvent("keyup", { key: " " });
+      canvas.dispatchEvent(keyDown);
+      setTimeout(() => canvas.dispatchEvent(keyUp), 80);
     }
   </script>
 </body>
