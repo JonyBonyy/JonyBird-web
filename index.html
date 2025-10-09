@@ -13,7 +13,6 @@
       align-items: center;
       height: 100vh;
       justify-content: center;
-      touch-action: manipulation;
     }
     #dosbox {
       width: 95vw;
@@ -44,39 +43,17 @@
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
-    let ci = null;
-    let canvas = null;
-    const playButton = document.getElementById('play');
-    const dosbox = document.getElementById('dosbox');
 
-    playButton.addEventListener('click', async function () {
-      // יוצר קנבס מראש כדי שהדפדפן יזהה אינטראקציה
-      playButton.style.display = 'none';
-      dosbox.innerHTML = '<canvas id="dos-canvas" style="width:95vw; height:85vh;"></canvas>';
-      canvas = document.getElementById('dos-canvas');
-
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
       try {
-        ci = await Dos(canvas).run(bundleUrl);
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
         console.log("Bundle started, CI ready");
-
-        // מוסיף שליטה דרך נגיעה או לחיצה
-        canvas.addEventListener("touchstart", handleTap);
-        canvas.addEventListener("mousedown", handleTap);
       } catch (e) {
         console.error("Failed to start bundle:", e);
-        playButton.style.display = 'block';
+        this.disabled = false;
       }
     });
-
-    function handleTap(e) {
-      e.preventDefault();
-      if (!canvas) return;
-      // מדמה לחיצה על מקש רווח
-      const keyDown = new KeyboardEvent("keydown", { key: " " });
-      const keyUp = new KeyboardEvent("keyup", { key: " " });
-      canvas.dispatchEvent(keyDown);
-      setTimeout(() => canvas.dispatchEvent(keyUp), 80);
-    }
   </script>
 </body>
 </html>
