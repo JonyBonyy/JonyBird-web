@@ -19,80 +19,58 @@
       height: 85vh;
       margin-top: 15px;
     }
+    #play {
+      margin-top: 10px;
+      padding: 14px 26px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      background: #222;
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+    #play:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
     #loading {
       color: white;
       font-size: 24px;
       margin: 20px;
-      font-family: Arial, sans-serif;
     }
   </style>
 </head>
 <body>
   <div id="loading">Loading JonyBird...</div>
+  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
   
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     
-    async function startGame() {
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
+      document.getElementById('loading').style.display = 'none';
       try {
-        console.log("[v0] Attempting to start game with bundleUrl:", bundleUrl);
-        
-        // Try method 1: Direct call with await on Dos first
-        try {
-          console.log("[v0] Trying method 1: await Dos() then .run()");
-          const dos = await Dos(document.getElementById('dosbox'));
-          console.log("[v0] Dos instance created:", dos);
-          console.log("[v0] Dos instance type:", typeof dos);
-          console.log("[v0] Dos.run exists:", typeof dos.run);
-          
-          if (typeof dos.run === 'function') {
-            const ci = await dos.run(bundleUrl);
-            console.log("[v0] Method 1 succeeded!");
-            document.getElementById('loading').style.display = 'none';
-            return;
-          }
-        } catch (e) {
-          console.log("[v0] Method 1 failed:", e.message);
-        }
-        
-        // Try method 2: Dos with bundle URL as second parameter
-        try {
-          console.log("[v0] Trying method 2: Dos(element, bundleUrl)");
-          const ci = await Dos(document.getElementById('dosbox'), bundleUrl);
-          console.log("[v0] Method 2 succeeded!");
-          document.getElementById('loading').style.display = 'none';
-          return;
-        } catch (e) {
-          console.log("[v0] Method 2 failed:", e.message);
-        }
-        
-        // Try method 3: Dos with config object
-        try {
-          console.log("[v0] Trying method 3: Dos with config object");
-          const ci = await Dos(document.getElementById('dosbox'), {
-            url: bundleUrl
-          });
-          console.log("[v0] Method 3 succeeded!");
-          document.getElementById('loading').style.display = 'none';
-          return;
-        } catch (e) {
-          console.log("[v0] Method 3 failed:", e.message);
-        }
-        
-        throw new Error("All methods failed to load the game");
-        
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        console.log("Bundle started, CI ready");
       } catch (e) {
-        console.error("[v0] All attempts failed:", e);
-        document.getElementById('loading').textContent = 'Failed to load game. Check console for details.';
+        console.error("Failed to start bundle:", e);
+        this.disabled = false;
+        document.getElementById('loading').textContent = 'Failed to load. Please refresh.';
+        document.getElementById('loading').style.display = 'block';
         document.getElementById('loading').style.color = '#ff4444';
       }
-    }
+    });
     
+    // Auto-click the play button after page loads
     window.addEventListener('load', function() {
-      console.log("[v0] Window loaded, starting game in 1 second");
-      setTimeout(startGame, 1000);
+      setTimeout(function() {
+        document.getElementById('play').click();
+      }, 1500);
     });
   </script>
 </body>
