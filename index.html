@@ -19,7 +19,23 @@
       height: 85vh;
       margin-top: 15px;
     }
-    #status {
+    #play {
+      margin-top: 10px;
+      padding: 14px 26px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      background: #222;
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none; /* Hide the button */
+    }
+    #play:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    #loading {
       margin-top: 10px;
       padding: 14px 26px;
       font-size: 28px;
@@ -32,29 +48,33 @@
   </style>
 </head>
 <body>
-  <div id="status">⏳ Loading JonyBird...</div>
+  <div id="loading">⏳ Loading JonyBird...</div>
+  <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
 
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
 
-    setTimeout(function () {
-      const statusDiv = document.getElementById('status');
+    document.getElementById('play').addEventListener('click', async function () {
+      this.disabled = true;
+      document.getElementById('loading').style.display = 'none';
       try {
-        statusDiv.textContent = '🎮 Starting game...';
-        
-        Dos(document.getElementById('dosbox')).ready((fs, main) => {
-          fs.extract(bundleUrl).then(() => {
-            main(["-c", "BIRD.EXE"]);
-            statusDiv.style.display = 'none';
-          });
-        });
+        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
+        console.log("Bundle started, CI ready");
       } catch (e) {
         console.error("Failed to start bundle:", e);
-        statusDiv.textContent = '❌ Error: ' + e.message;
+        this.disabled = false;
+        document.getElementById('loading').textContent = '❌ Failed to load';
       }
-    }, 500);
+    });
+
+    // Automatically click the button after page loads
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('play').click();
+      }, 500);
+    });
   </script>
 </body>
 </html>
