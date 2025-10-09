@@ -29,21 +29,14 @@
       border: 2px solid white;
       border-radius: 8px;
       cursor: pointer;
-      display: none;
     }
     #play:disabled {
       opacity: 0.5;
       cursor: default;
     }
-    #loading {
-      color: white;
-      font-size: 24px;
-      margin: 20px;
-    }
   </style>
 </head>
 <body>
-  <div id="loading">Loading JonyBird...</div>
   <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
   
@@ -53,24 +46,15 @@
     
     document.getElementById('play').addEventListener('click', async function () {
       this.disabled = true;
-      document.getElementById('loading').style.display = 'none';
       try {
+        console.log("[v0] Starting game load...");
         const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
-        console.log("Bundle started, CI ready");
+        console.log("[v0] Bundle started, CI ready");
       } catch (e) {
-        console.error("Failed to start bundle:", e);
+        console.error("[v0] Failed to start bundle:", e);
         this.disabled = false;
-        document.getElementById('loading').textContent = 'Failed to load. Please refresh.';
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('loading').style.color = '#ff4444';
+        alert("Error: " + e.message);
       }
-    });
-    
-    // Auto-click the play button after page loads
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        document.getElementById('play').click();
-      }, 1500);
     });
   </script>
 </body>
