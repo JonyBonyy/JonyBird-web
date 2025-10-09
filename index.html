@@ -29,26 +29,14 @@
       border: 2px solid white;
       border-radius: 8px;
       cursor: pointer;
-      display: none;
     }
     #play:disabled {
       opacity: 0.5;
       cursor: default;
     }
-    #loading {
-      margin-top: 10px;
-      padding: 14px 26px;
-      font-size: 28px;
-      font-weight: bold;
-      color: white;
-      background: #222;
-      border: 2px solid white;
-      border-radius: 8px;
-    }
   </style>
 </head>
 <body>
-  <div id="loading">⏳ Loading JonyBird...</div>
   <button id="play">▶ Play JonyBird</button>
   <div id="dosbox"></div>
 
@@ -59,7 +47,6 @@
 
     document.getElementById('play').addEventListener('click', async function () {
       this.disabled = true;
-      document.getElementById('loading').style.display = 'none';
       try {
         ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
         console.log("Bundle started, CI ready");
@@ -67,30 +54,16 @@
         // Add mobile touch controls after game loads
         document.getElementById('dosbox').addEventListener('touchstart', function(e) {
           e.preventDefault();
-          // Simulate Space key press (jump)
-          ci.simulateKeyPress(32); // Space key code
-          // Also simulate Y key press (play again)
-          ci.simulateKeyPress(89); // Y key code
-        });
-        
-        // Also add click support for desktop testing
-        document.getElementById('dosbox').addEventListener('click', function(e) {
-          ci.simulateKeyPress(32); // Space
-          ci.simulateKeyPress(89); // Y
+          if (ci && ci.simulateKeyPress) {
+            ci.simulateKeyPress(32); // Space key (jump)
+            ci.simulateKeyPress(89); // Y key (play again)
+          }
         });
         
       } catch (e) {
         console.error("Failed to start bundle:", e);
         this.disabled = false;
-        document.getElementById('loading').textContent = '❌ Failed to load';
       }
-    });
-
-    // Automatically click the button after page loads
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        document.getElementById('play').click();
-      }, 500);
     });
   </script>
 </body>
