@@ -22,26 +22,46 @@
       color: white;
       font-size: 24px;
       margin: 20px;
+      font-family: Arial, sans-serif;
     }
   </style>
 </head>
 <body>
   <div id="loading">Loading JonyBird...</div>
   <div id="dosbox"></div>
+  
   <script src="js-dos.js"></script>
   <script>
     const bundleUrl = "https://jonybonyy.github.io/JonyBird-web/BIRD.jsdos";
     
-    window.addEventListener('load', async function () {
-      try {
-        const ci = await Dos(document.getElementById('dosbox')).run(bundleUrl);
-        document.getElementById('loading').style.display = 'none';
-        console.log("Bundle started, CI ready");
-      } catch (e) {
-        console.error("Failed to start bundle:", e);
-        document.getElementById('loading').textContent = 'Failed to load game. Please refresh.';
+    // Wait for js-dos to be fully loaded, then start the game
+    function startGame() {
+      if (typeof Dos === 'undefined') {
+        // js-dos not loaded yet, wait a bit longer
+        setTimeout(startGame, 100);
+        return;
       }
-    });
+      
+      // js-dos is ready, start the game
+      Dos(document.getElementById('dosbox'))
+        .run(bundleUrl)
+        .then(function(ci) {
+          document.getElementById('loading').style.display = 'none';
+          console.log("Bundle started, CI ready");
+        })
+        .catch(function(e) {
+          console.error("Failed to start bundle:", e);
+          document.getElementById('loading').textContent = 'Failed to load game. Please refresh.';
+          document.getElementById('loading').style.color = '#ff4444';
+        });
+    }
+    
+    // Start the game after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startGame);
+    } else {
+      startGame();
+    }
   </script>
 </body>
 </html>
