@@ -1,4 +1,13 @@
-for now to open the game in the site you need to download the BIRD.jsdos from my github reposetory here. than press play and press on the button at the middle, insert the BIRD.jsdos file there and press play.
+for now to open the game in the site you need to:
+
+1. download the BIRD.jsdos from my github reposetory here.
+
+2. open the link from above ☝️
+
+3. than press play and press on the button at the middle, insert the BIRD.jsdos file there and press play.
+
++ press esc to see what are all the game mechanics
+
 later i will make it work automatically (maybe).
 
 THE SITE ONLY WORKS IN PC FOR NOW
