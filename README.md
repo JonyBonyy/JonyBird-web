@@ -8,7 +8,7 @@ for now to open the game in the site you need to:
 
 + press esc to see what are all the game mechanics
 
-later i will make it work automatically (maybe).
+later I'll make it work automatically (maybe).
 
 THE SITE ONLY WORKS IN PC FOR NOW
 
