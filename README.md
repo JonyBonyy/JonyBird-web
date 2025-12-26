@@ -2,7 +2,7 @@ for now to open the game in the site you need to:
 
 + download the BIRD.jsdos from my github reposetory here.
 
-+ open the link from above ☝️
++ open this link: jonybonyy.github.io/JonyBird-web/
 
 + than press play and press on the button at the middle, insert the BIRD.jsdos file there and press play.
 
